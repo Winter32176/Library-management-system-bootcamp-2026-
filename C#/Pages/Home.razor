@@ -1,0 +1,295 @@
+﻿@page "/"
+@using Library_management_system.Api
+@using Library_management_system.Model
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject BooksApi BooksApi
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, library management system!</h1>
+
+
+
+<div class="hstack gap-3 align-items-center">
+
+    <button class="btn btn-primary" @onclick="AddBook">Add</button>
+    <button class="btn btn-primary" @onclick="ViewAll">View all</button>
+
+    <div class="hstack gap-3 align-items-center purple-bg p-2 rounded">
+        <input class="form-control"
+               placeholder="@InputPlaceholder"
+               @bind="SearchValue"
+               disabled="@IsInputDisabled" />
+
+        @foreach (var m in Methods)
+        {
+            <label class="form-check m-0 d-flex align-items-center gap-2">
+                <InputCheckbox class="form-check-input"
+                               @bind-Value="m.IsSelected"
+                               @onchange="(_) => OnMethodChanged(m)" />
+                <span class="form-check-label">@m.Text</span>
+            </label>
+        }
+
+        <button class="btn btn-light" @onclick="Search" disabled="@IsSearchDisabled">
+            Search
+        </button>
+    </div>
+
+</div>
+
+@if (isFormVisible)
+{
+    <div class="card p-3 mt-3">
+        <h4>@FormTitle</h4>
+
+        <label>ISBN</label><input class="form-control mb-2" placeholder="ISBN" @bind="model.Isbn" />
+        <label>Author</label><input class="form-control mb-2" placeholder="Author" @bind="model.Author" />
+        <label>Name</label><input class="form-control mb-2" placeholder="Name" @bind="model.Name" />
+        <label>Year</label><input class="form-control mb-2" placeholder="Year" type="date" @bind="model.Year" />
+        <label>Section</label><input class="form-control mb-2" placeholder="Section" @bind="model.Section" />
+        <label>Shelf</label><input class="form-control mb-2" placeholder="Shelf" @bind="model.Shelf" />
+        <label>Number of left books</label><input class="form-control mb-2" placeholder="Number of left books" type="number" @bind="model.numberOfLeft" />
+        <label>Number of loaned books</label><input class="form-control mb-2" placeholder="Number of loaned books" type="number" @bind="model.numberOfLoaned" />
+
+        @if (model.numberOfLeft == 0)
+        {
+            <select class="form-control mb-2" @bind="model.State">
+                <option value="LOANED">LOANED</option>
+            </select>
+        }
+        else
+        {
+            <select class="form-control mb-2" @bind="model.State">
+                <option value="IN_STOCK">IN_STOCK</option>
+            </select>
+        }
+
+        @if (isEdit)
+        {
+            <button class="btn btn-success" @onclick="() => Edit()">Edit</button>
+        }
+        else
+        {
+            <button class="btn btn-success" @onclick="Save">Save</button>
+        }
+
+
+        <button class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+    </div>
+}
+
+<div>
+    @if (isLoading)
+    {
+        <p>Loading...</p>
+    }
+    else if (error is not null)
+    {
+        <p class="text-danger">@error</p>
+    }
+    else if (books == null || books.Count == 0)
+    {
+        <p>No books</p>
+    }
+    else
+    {
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ISBN</th>
+                    <th>Section</th>
+                    <th>Shelf</th>
+                    <th>Author</th>
+                    <th>Name</th>
+                    <th>Year</th>
+                    <th>State</th>
+                    <th>Number of books left</th>
+                    <th>Number of books loaned</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var l in books)
+                {
+                    <tr>
+                        <td>@l.Isbn</td>
+                        <td>@l.Section</td>
+                        <td>@l.Shelf</td>
+                        <td>@l.Author</td>
+                        <td>@l.Name</td>
+                        <td>@l.Year</td>
+                        <td>@l.State</td>
+                        <td>@l.numberOfLeft</td>
+                        <td>@l.numberOfLoaned</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="() => UpdateBook(l)">Update</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="() => DeleteBook(l)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+
+    }
+</div>
+
+
+
+@code {
+
+    private string FormTitle => isEdit ? "Edit book" : "Add book";
+
+    private bool isFormVisible;
+    private bool isEdit;
+    private BookDto model = new();
+
+    private bool isLoading = true;
+    private string? error = null;
+
+    private List<BookDto>? books = new();
+
+    private string? SearchValue;
+
+    private List<SearchMethod> Methods = new()
+    {
+        new(SearchKind.ByIsbn,    "ISBN"),
+        new(SearchKind.ByShelf,   "Shelf"),
+        new(SearchKind.BySection, "Section"),
+    };
+
+    private SearchMethod? Selected => Methods.FirstOrDefault(x => x.IsSelected);
+
+    private string InputPlaceholder => Selected?.Kind switch
+    {
+        SearchKind.ByIsbn => "Enter ISBN...",
+        SearchKind.ByShelf => "Enter shelf...",
+        SearchKind.BySection => "Enter section...",
+        _ => "Select method..."
+    };
+
+    private bool IsInputDisabled =>
+        Selected is null || Selected.Kind == SearchKind.AllBooks;
+
+    private bool IsSearchDisabled =>
+        Selected is null || (!IsInputDisabled && string.IsNullOrWhiteSpace(SearchValue));
+
+    void Cancel() => isFormVisible = false;
+
+    private async Task Search()
+    {
+        switch (Selected?.Text ?? "")
+        {
+            case "ISBN":
+                books = new() { await BooksApi.GetByIsbnAsync(SearchValue ?? "") ?? new() };
+                break;
+            case "Shelf":
+                books = await BooksApi.GetByShelfAsync(SearchValue ?? "") ?? books;
+                break;
+            case "Section":
+                books = await BooksApi.GetBySectionAsync(SearchValue ?? "") ?? books;
+                break;
+            default:
+                break;
+        }
+    }
+    private async Task AddBook()
+    {
+        model = new BookDto();
+        isEdit = false;
+        isFormVisible = true;
+
+    }
+
+    private async Task Save()
+    {
+        await BooksApi.AddAsync(model);
+        await ViewAll();
+        isFormVisible = false;
+    }
+
+    private async Task DeleteBook(BookDto book)
+    {
+        await BooksApi.DeleteBook(book.Isbn);
+        await ViewAll();
+    }
+
+    private async Task UpdateBook(BookDto book)
+    {
+        model = new BookDto
+        {
+            IsbnOLD=book.Isbn,
+            Isbn = book.Isbn,
+            Author = book.Author,
+            Name = book.Name,
+            Year = book.Year,
+            Section = book.Section,
+            Shelf = book.Shelf,
+            State = book.State,
+            numberOfLeft= book.numberOfLeft,
+            numberOfLoaned= book.numberOfLoaned
+        };
+        isEdit = true;
+        isFormVisible = true;
+
+    }
+
+    private async Task Edit()
+    {
+        await BooksApi.UpdateBook(model, model.IsbnOLD);
+        await ViewAll();
+
+        isEdit = false;
+        isFormVisible = false;
+    }
+
+    private async Task ViewAll()
+    {
+        books = await BooksApi.GetAllAsync();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            error = null;
+            var result = await BooksApi.GetAllAsync();
+            books = result ?? new List<BookDto>();
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void OnMethodChanged(SearchMethod changed)
+    {
+        if (changed.IsSelected)
+            foreach (var m in Methods)
+                if (m != changed) m.IsSelected = false;
+
+        SearchValue = null;
+    }
+
+    private enum SearchKind { ByIsbn, AllBooks, ByShelf, BySection }
+
+    private class SearchMethod
+    {
+        public SearchMethod(SearchKind kind, string text)
+        {
+            Kind = kind;
+            Text = text;
+        }
+        public SearchKind Kind { get; }
+        public string Text { get; }
+        public bool IsSelected { get; set; }
+    }
+}

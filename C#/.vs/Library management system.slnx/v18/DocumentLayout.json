@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Robert\\Desktop\\Bootcamp\\Task__M9\\C#\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{CCCFB17A-1D2F-53C2-AB89-52694E87B476}|Library management system.csproj|c:\\users\\robert\\desktop\\bootcamp\\task__m9\\c#\\model\\model.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CCCFB17A-1D2F-53C2-AB89-52694E87B476}|Library management system.csproj|solutionrelative:model\\model.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CCCFB17A-1D2F-53C2-AB89-52694E87B476}|Library management system.csproj|c:\\users\\robert\\desktop\\bootcamp\\task__m9\\c#\\api\\api.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CCCFB17A-1D2F-53C2-AB89-52694E87B476}|Library management system.csproj|solutionrelative:api\\api.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CCCFB17A-1D2F-53C2-AB89-52694E87B476}|Library management system.csproj|c:\\users\\robert\\desktop\\bootcamp\\task__m9\\c#\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CCCFB17A-1D2F-53C2-AB89-52694E87B476}|Library management system.csproj|solutionrelative:pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Model.cs",
+              "DocumentMoniker": "C:\\Users\\Robert\\Desktop\\Bootcamp\\Task__M9\\C#\\Model\\Model.cs",
+              "RelativeDocumentMoniker": "Model\\Model.cs",
+              "ToolTip": "C:\\Users\\Robert\\Desktop\\Bootcamp\\Task__M9\\C#\\Model\\Model.cs",
+              "RelativeToolTip": "Model\\Model.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwBIAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-05T06:05:34.423Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "api.cs",
+              "DocumentMoniker": "C:\\Users\\Robert\\Desktop\\Bootcamp\\Task__M9\\C#\\Api\\api.cs",
+              "RelativeDocumentMoniker": "Api\\api.cs",
+              "ToolTip": "C:\\Users\\Robert\\Desktop\\Bootcamp\\Task__M9\\C#\\Api\\api.cs",
+              "RelativeToolTip": "Api\\api.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACMAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-04T16:25:09.06Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Home.razor",
+              "DocumentMoniker": "C:\\Users\\Robert\\Desktop\\Bootcamp\\Task__M9\\C#\\Pages\\Home.razor",
+              "RelativeDocumentMoniker": "Pages\\Home.razor",
+              "ToolTip": "C:\\Users\\Robert\\Desktop\\Bootcamp\\Task__M9\\C#\\Pages\\Home.razor",
+              "RelativeToolTip": "Pages\\Home.razor",
+              "ViewState": "AgIAAAIBAAAAAAAAAAAAABEBAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-02-04T15:50:56.679Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
